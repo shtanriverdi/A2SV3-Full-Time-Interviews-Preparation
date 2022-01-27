@@ -7,14 +7,10 @@ public:
         int l = 0, len = people.size(), r = len - 1, result = 0;
         while (l < r) {
             if (people[r] + people[l] <= limit) {
-                result++;
-                r--;
                 l++;
             }
-            else {
-                result++;
-                r--;
-            }
+            result++;
+            r--;
         }
         return result + (l == r);
     }
