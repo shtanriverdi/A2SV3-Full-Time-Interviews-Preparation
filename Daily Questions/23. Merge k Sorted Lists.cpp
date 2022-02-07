@@ -10,6 +10,32 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
+
+// Concise Solution
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        vector<int> counts(20001, 0);
+        for (ListNode* &list : lists) {
+            for (ListNode* w = list; w != NULL; w = w->next) {
+                counts[w->val + 10000]++;
+            }
+        }
+        
+        ListNode* mergedList = new ListNode(1453);
+        ListNode* walk = mergedList;
+        for (int i = 0; i < 20001; i++) {
+            for (; counts[i] > 0; counts[i]--) {
+                walk->next = new ListNode(i - 10000);
+                walk = walk->next;
+            }
+        }
+        
+        return mergedList->next;
+    }
+};
+
+// Initial Solution
 class Solution {
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
