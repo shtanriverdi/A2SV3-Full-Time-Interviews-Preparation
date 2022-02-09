@@ -1,5 +1,46 @@
 // Question Link: https://leetcode.com/problems/remove-k-digits/
 
+// Monotonic Stack Solution
+class Solution {
+public:
+    string removeKdigits(string &num, int k) {
+        int len = num.size();
+        if (k == len) {
+            return "0";
+        }
+        
+        stack<int> monoIncStack;
+        for (int i = 0; i < num.size() && k > 0; i++) {
+            while (!monoIncStack.empty() && num[i] < num[monoIncStack.top()] && k > 0) {
+                num[monoIncStack.top()] = '*';
+                monoIncStack.pop();
+                k--;
+            }
+            monoIncStack.push(i);
+        }
+        
+        while (k > 0 && !monoIncStack.empty()) {
+            num[monoIncStack.top()] = '*';
+            monoIncStack.pop();
+            k--;
+        }
+        
+        string result;
+        for (char c : num) {
+            if (c != '*') {
+                result += c;
+            }
+        }
+        
+        int i = 0;
+        for (; i < result.size() && result[i] == '0'; i++) {}
+        
+        string cleanRes(begin(result) + i, end(result));
+        return cleanRes == "" ? "0" : cleanRes;
+    }
+};
+
+// Monotonic Queue Solution
 class Solution {
 public:
     string removeKdigits(string &num, int k) {
