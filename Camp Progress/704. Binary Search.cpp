@@ -21,9 +21,7 @@ public:
                 return binarySearch(nums, target, left, mid - 1);
             }
         }
-        else {
-            return -1;
-        }
+        return -1;
     }
 };
 
