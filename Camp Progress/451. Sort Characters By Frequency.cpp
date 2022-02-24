@@ -1,24 +1,69 @@
-// Question Link: https://leetcode.com/problems/sort-characters-by-frequency/
+// Question Link: https://leetcode.com/problems/top-k-frequent-words
 
+// O(NlogK)
 class Solution {
 public:
-    string frequencySort(string s) {
-        unordered_map<char, int> letterCountMap;
-        for (char c : s) {
-            letterCountMap[c]++;
+    vector<string> topKFrequent(vector<string>& words, int k) {
+        unordered_map<string, int> wordCountMap;
+        for (string &word : words) {
+            wordCountMap[word]++;
         }
         
-        priority_queue<vector<int>> PQ;
-        for (auto &it : letterCountMap) {
+        auto cmp = [](pair<int, string> &a, pair<int, string> &b) {
+            if (a.first > b.first) {
+                return true;
+            }
+            if (a.first == b.first && a.second < b.second) {
+                return true;
+            }
+            return false;
+        };
+        
+        priority_queue<pair<int, string>, vector<pair<int, string>>, decltype(cmp)> PQ(cmp);
+        for (auto &it : wordCountMap) {
+            PQ.push({ it.second, it.first });
+            if (PQ.size() > k) {
+                PQ.pop();
+            }
+        }
+        
+        vector<string> result;
+        for (; !PQ.empty() && k > 0; PQ.pop(), k--) {
+            result.push_back(PQ.top().second);
+        }
+        
+        reverse(begin(result), end(result));
+        return result;
+    }
+};
+
+// O(NlogK)
+class Solution {
+public:
+    vector<string> topKFrequent(vector<string>& words, int k) {
+        unordered_map<string, int> wordCountMap;
+        for (string &word : words) {
+            wordCountMap[word]++;
+        }
+        
+        auto cmp = [](pair<int, string> &a, pair<int, string> &b) {
+            if (a.first < b.first) {
+                return true;
+            }
+            if (a.first == b.first && a.second > b.second) {
+                return true;
+            }
+            return false;
+        };
+        
+        priority_queue<pair<int, string>, vector<pair<int, string>>, decltype(cmp)> PQ(cmp);
+        for (auto &it : wordCountMap) {
             PQ.push({ it.second, it.first });
         }
         
-        string result = "";
-        for (; !PQ.empty(); PQ.pop()) {
-            int count = PQ.top()[0];
-            while (count-- > 0) {
-                result += (char)PQ.top()[1];
-            }
+        vector<string> result;
+        for (; !PQ.empty() && k > 0; PQ.pop(), k--) {
+            result.push_back(PQ.top().second);
         }
         
         return result;
