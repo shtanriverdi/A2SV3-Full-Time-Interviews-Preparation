@@ -1,5 +1,47 @@
 // Question Link: https://leetcode.com/problems/find-a-peak-element-ii/
 
+// O(logN) * O(logM)
+class Solution {
+public:
+    vector<int> findPeakGrid(vector<vector<int>>& mat) {
+        int M = mat.size();
+        int N = mat[0].size();
+
+        int li = 0, hi = M - 1, im;
+        int lj = 0, hj = N - 1, jm;
+        
+        vector<int> invalid = { -1, -1 }, result = invalid;
+        
+        while (result == invalid) {
+            im = li + (hi - li) / 2;
+            jm = lj + (hj - lj) / 2;
+            
+            int up = (im - 1 >= 0) ? mat[im - 1][jm] : INT_MIN;
+            int down = (im + 1 < M) ? mat[im + 1][jm] : INT_MIN;
+            int right = (jm + 1 < N) ? mat[im][jm + 1] : INT_MIN;
+            int left = (jm - 1 >= 0) ? mat[im][jm - 1] : INT_MIN;
+            
+            int maxNeighbor = max({ up, down, left, right });
+            
+            if (mat[im][jm] > maxNeighbor) {
+                return { im, jm };
+            }
+            
+            li = (maxNeighbor == down) ? im + 1 : li;
+            hi = (maxNeighbor == up) ? im - 1 : hi;
+            li = (hi < li) ? hi : li;
+            hi = (li > hi) ? li : hi;
+            
+            lj = (maxNeighbor == right) ? jm + 1 : lj;
+            hj = (maxNeighbor == left) ? jm - 1 : hj;
+            lj = (hj < lj) ? hj : lj;
+            hj = (lj > hj) ? lj : hj;
+        }
+        
+        return result;
+    }
+};
+
 // O(M + N)
 class Solution {
 public:
