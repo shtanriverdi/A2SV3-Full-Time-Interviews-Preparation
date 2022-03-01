@@ -1,5 +1,59 @@
 // Question Link: https://leetcode.com/problems/surrounded-regions/
 
+// No Extra Space
+class Solution {
+public:
+    void solve(vector<vector<char>>& board) {
+        int M = board.size();
+        int N = board[0].size();
+        
+        vector<int> dirs = { 0, 1, 0, -1, 0 };
+        
+        for (int j = 0; j < N; j++) {
+            if (board[0][j] == 'O') {
+                dfs(board, 0, j, dirs, M, N);
+            }
+            if (board[M - 1][j] == 'O') {
+                dfs(board, M - 1, j, dirs, M, N);
+            }
+        }
+        
+        for (int i = 0; i < M; i++) {
+            if (board[i][0] == 'O') {
+                dfs(board, i, 0, dirs, M, N);
+            }
+            if (board[i][N - 1] == 'O') {
+                dfs(board, i, N - 1, dirs, M, N);
+            }
+        }
+        
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                board[i][j] = (board[i][j] == 'O') ? 'X' : ((board[i][j] == '*') ? 'O' : 'X');
+            }   
+        } 
+    }
+    
+    void dfs(vector<vector<char>> &board, int i, int j, vector<int> &dirs, int &M, int &N) {
+        board[i][j] = '*';
+        for (int d = 1; d < 5; d++) {
+            int ni = i + dirs[d];
+            int nj = j + dirs[d - 1];
+            if (inside(ni, nj, M, N) && board[ni][nj] == 'O') {
+                dfs(board, ni, nj, dirs, M, N);
+            }
+        }
+    }
+    
+    bool inside(int i, int j, int &M, int &N) {
+        if (i < 0 || i>= M || j < 0 || j >= N) {
+            return false;
+        }
+        return true;
+    } 
+};
+
+// Using Extra Space
 class Solution {
 public:
     void solve(vector<vector<char>>& board) {
