@@ -1,5 +1,24 @@
 // Question Link: https://leetcode.com/problems/jump-game-iii
 
+// DFS Recursion
+class Solution {
+public:
+    bool canReach(vector<int>& arr, int cur) {
+        if (cur < 0 || cur >= arr.size() || arr[cur] == -1) {
+            return false;
+        }
+        
+        int offset = arr[cur];
+        if (offset == 0) {
+            return true;
+        }
+        
+        arr[cur] = -1;
+        return canReach(arr, cur + offset) || canReach(arr, cur - offset);
+    }
+};
+
+// BFS
 class Solution {
 public:
     bool canReach(vector<int>& arr, int start) {
