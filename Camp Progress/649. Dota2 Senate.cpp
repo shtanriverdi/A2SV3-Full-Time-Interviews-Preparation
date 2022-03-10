@@ -1,0 +1,34 @@
+// Question Link: https://leetcode.com/problems/dota2-senate/
+
+class Solution {
+public:
+    string predictPartyVictory(string senate) {
+        queue<int> D, R;
+        int len = senate.size();
+        for (int i = 0; i < len; i++) {
+            if (senate[i] == 'D') {
+                D.push(i);
+            }
+            else {
+                R.push(i);
+            }
+        }
+        
+        while (!D.empty() && !R.empty()) {
+            int dIdx = D.front();
+            D.pop();
+            
+            int rIdx = R.front();
+            R.pop();
+            
+            if (dIdx < rIdx) {
+                D.push(dIdx + len);
+            }
+            else {
+                R.push(rIdx + len);
+            }
+        }
+        
+        return D.empty() ? "Radiant" : "Dire";
+    }
+};
