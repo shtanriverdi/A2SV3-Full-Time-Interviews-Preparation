@@ -4,6 +4,45 @@
     We need to detect if given graph is DAG (Directed Acyclic Graph)
     To detect that, we need to check if graph has any cycle
 */
+
+// BFS Solution
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> graph(numCourses);
+        vector<int> indegrees(numCourses, 0);
+        for (vector<int> &pre : prerequisites) {
+            int from = pre[1];
+            int to = pre[0];
+            graph[from].push_back(to);
+            indegrees[to]++;
+        }
+        
+        queue<int> todo;
+        for (int i = 0; i < indegrees.size(); i++) {
+            if (indegrees[i] == 0) {
+                todo.push(i);
+            }
+        }
+        
+        int nodesTaken = 0;
+        while (!todo.empty()) {
+            int cur = todo.front();
+            todo.pop();
+            nodesTaken++;
+            for (int &neighbor : graph[cur]) {
+                indegrees[neighbor]--;
+                if (indegrees[neighbor] == 0) {
+                    todo.push(neighbor);
+                }
+            }
+        }
+        
+        return nodesTaken == numCourses;
+    }
+};
+
+// DFS Solution
 class Solution {
 public:
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
