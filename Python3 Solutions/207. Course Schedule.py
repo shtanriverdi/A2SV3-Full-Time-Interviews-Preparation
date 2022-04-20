@@ -4,6 +4,36 @@
     We need to detect if given graph is DAG (Directed Acyclic Graph)
     To detect that, we need to check if graph has any cycle
 """
+
+# BFS Solution
+from collections import deque
+
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        graph = [[] for _ in range(numCourses)]
+        indegrees = [0] * numCourses
+        for dest, src in prerequisites:
+            graph[src].append(dest)
+            indegrees[dest] += 1
+        
+        todo = deque()
+        for i in range(numCourses):
+            if indegrees[i] == 0:
+                todo.append(i)
+                
+        nodesProcesses = 0
+        while todo:
+            cur = todo.pop()
+            nodesProcesses += 1
+            for neighbor in graph[cur]:
+                indegrees[neighbor] -= 1
+                if indegrees[neighbor] == 0:
+                    todo.append(neighbor)
+                
+        return nodesProcesses == numCourses
+
+    
+# DFS Solution
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         
