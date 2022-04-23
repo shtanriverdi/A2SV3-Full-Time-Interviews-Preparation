@@ -1,5 +1,42 @@
 // Question Link: https://leetcode.com/problems/find-eventual-safe-states/
 
+// DFS Coloring
+class Solution {
+public:
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        int n = graph.size();
+        vector<int> colors(n, 0), result;
+        
+        for (int i = 0; i < n; i++) {
+            bool safe = dfs(i, graph, colors);
+            if (safe) {
+                result.push_back(i);
+            }
+        }
+        
+        return result;
+    }
+    
+    // 0: White, 1: Gray(Unsafe), 2: Black(Safe)
+    bool dfs(int cur, vector<vector<int>> &graph, vector<int> &colors) {
+        if (colors[cur] > 0) {
+            return colors[cur] == 2;
+        }
+        
+        colors[cur] = 1;
+        
+        for (int &neigh : graph[cur]) {
+            bool safe = dfs(neigh, graph, colors);
+            if (!safe) {
+                return false;
+            }
+        }
+        
+        colors[cur] = 2;
+        return true;
+    }
+};
+
 // BFS Outgoing Edges Solution
 class Solution {
 public:
