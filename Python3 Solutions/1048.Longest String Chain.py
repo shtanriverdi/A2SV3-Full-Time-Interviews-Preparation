@@ -1,4 +1,55 @@
 # Question Link: https://leetcode.com/problems/longest-string-chain/
+
+# Better Sliding Window Solution
+from collections import Counter
+
+class Solution:
+    def longestStrChain(self, words: List[str]) -> int:
+        words.sort(key = lambda word: len(word))
+        
+        dp = [[1]]
+        words_by_length = [[words[0]]]
+        for i in range(1, len(words)):
+            if len(words[i]) == len(words_by_length[-1][-1]):
+                words_by_length[-1].append(words[i])
+                dp[-1].append(1)
+            else:
+                words_by_length.append([words[i]])
+                dp.append([1])
+        
+        longest_chain_length = 1
+        for i in range(1, len(words_by_length)):
+            for j in range(len(words_by_length[i])):
+                for k in range(len(words_by_length[i - 1])):
+                    word_a = words_by_length[i][j]
+                    word_b = words_by_length[i - 1][k]
+                    is_valid_chain = self.isValidChain(word_a, word_b)
+                    if is_valid_chain:
+                        dp[i][j] = max(dp[i - 1][k] + 1, dp[i][j])
+                        longest_chain_length = max(longest_chain_length, dp[i][j])
+        
+        return longest_chain_length
+    
+    def isValidChain(self, word_a, word_b):
+        len_a = len(word_a)
+        len_b = len(word_b)
+        
+        if len_a - 1 != len_b:
+            return False
+        
+        longer_idx, shorter_idx = 0, 0
+        while longer_idx < len_a and shorter_idx < len_b:
+            if word_a[longer_idx] == word_b[shorter_idx]:
+                longer_idx += 1
+                shorter_idx += 1
+            else:
+                longer_idx += 1
+        
+        return longer_idx >= len_a - 1 and shorter_idx == len_b
+
+    
+    
+# Initial Map Solution
 from collections import Counter
 
 class Solution:
