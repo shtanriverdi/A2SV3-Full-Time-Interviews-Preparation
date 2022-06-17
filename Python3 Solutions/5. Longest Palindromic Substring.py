@@ -1,4 +1,39 @@
 # Question Link: https://leetcode.com/problems/longest-palindromic-substring/
+
+# Better Optimized Approach
+from collections import deque
+
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        length = len(s)
+        todo = deque()
+        for i in range(length):
+            todo.append((i, i))
+            if i + 1 < length and s[i + 1] == s[i]:
+                todo.append((i, i + 1))
+            
+        longest_pal_length = 1
+        longest_pal_i_j = (0, 0)
+        
+        seen = set()
+        while todo:
+            i, j = todo.popleft()
+            
+            if i - j + 1 > longest_pal_length:
+                longest_pal_length = i - j + 1
+                longest_pal_i_j = (i, j)
+            
+            new_left_right = (i + 1, j - 1)
+            if i + 1 < length and (new_left_right not in seen) and j - 1 >= 0 and s[i + 1] == s[j - 1]:
+                todo.append(new_left_right)
+                seen.add(new_left_right)
+        
+        i, j = longest_pal_i_j[0], longest_pal_i_j[1]
+        return s[j:i+1]
+
+    
+    
+# Initial Approach
 from collections import deque
 
 class Solution:
